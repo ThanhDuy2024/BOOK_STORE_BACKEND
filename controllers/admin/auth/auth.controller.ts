@@ -1,9 +1,29 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import { Admin } from "../../../models/admin.model";
+//Con check user name email trung nhau o day ne
 export const RegisterAdminController = async (req: Request, res: Response) => {
     try {
         const { adminName, fullName, email, password } = req.body;
+
+        const adminNameCheck = await Admin.findOne({
+            where: {
+               adminName: adminName, 
+            }
+        })
+
+        const emailCheck = await Admin.findOne({
+            where: {
+                email: email,
+            }
+        });
+
+        if(adminNameCheck?.dataValues || emailCheck?.dataValues) {
+            return res.status(400).json({
+                status: false,
+                msg: "Admin name or email have existed!"
+            })
+        };
 
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(password, salt);

@@ -10,7 +10,7 @@ const port = process.env.PORT;
 connectDatabase();
 
 app.use(cors({
-  origin: String(process.env.FE_HOST), // Đảm bảo FE_HOST không có dấu / ở cuối
+  origin: String(process.env.FE_HOST),
   methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'set-cookie'],
   credentials: true,
