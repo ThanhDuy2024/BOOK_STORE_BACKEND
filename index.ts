@@ -12,7 +12,7 @@ connectDatabase();
 app.use(cors({
   origin: String(process.env.FE_HOST),
   methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'set-cookie'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'set-cookie', 'token'],
   credentials: true,
 }));
 
