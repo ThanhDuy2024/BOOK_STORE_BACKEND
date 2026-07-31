@@ -10,7 +10,7 @@ export const connectDatabase = async () => {
     try {
         await sequelize.authenticate();
         await sequelize.sync({
-            alter: false
+            alter: true
         })
         console.log("Database has connected!")
     } catch (error) {
