@@ -3,15 +3,16 @@ import { admin } from "../../../interfaces/admin.interface";
 import { Categories } from "../../../models/categories.model";
 import { Admin } from "../../../models/admin.model";
 import { Op } from "sequelize";
-
+import { funcPagination } from "../../../helpers/pagination.helper";
+const limit = 10;
 export const CreateCategoryController = async (req: admin, res: Response) => {
     try {
-        if(req.file) {
+        if (req.file) {
             req.body.image = req.file.path;
         } else {
             delete req.body.image;
         };
-        
+
         await Categories.create({
             categoryName: req.body.categoryName,
             status: req.body.status,
@@ -37,6 +38,7 @@ export const GetCategoryController = async (req: admin, res: Response) => {
     try {
         const query: any = {
             nest: true,
+            distinct: true,
             include: [
                 {
                     model: Admin,
@@ -50,26 +52,40 @@ export const GetCategoryController = async (req: admin, res: Response) => {
                 }
             ],
             where: {
-                status: ['active', 'inactive']
+                status: {
+                    [Op.in]: ['active', 'inactive']
+                }
             },
             order: [
                 ["updatedAt", "desc"]
-            ]
+            ],
+            offset: 0,
+            limit: limit
         }
 
-        if(req.query.search){
+        if (req.query.search) {
             query.where.categoryName = {
                 [Op.iLike]: `%${String(req.query.search).trim()}%`
             }
         }
 
-        if(req.query.status != "all") {
+        if (req.query.status != "all") {
             query.where.status = req.query.status
         }
 
-        if(req.query.updatedAt != "desc") {
+        if (req.query.updatedAt != "desc") {
             query.order = [["updatedAt", 'desc']]
         };
+
+
+        const totalItem = await Categories.count(query);
+
+        const pagination = funcPagination(Number(totalItem), Number(req.query.page), 1);
+
+        console.log(pagination);
+        query.offset = pagination.skip;
+
+        console.log(query);
 
         const categories = await Categories.findAll(query);
 
@@ -82,6 +98,105 @@ export const GetCategoryController = async (req: admin, res: Response) => {
         res.status(400).json({
             status: false,
             msg: "Bad request!"
+        })
+    }
+}
+
+export const UpdateCategoryController = async (req: admin, res: Response) => {
+    try {
+        if (req.file) {
+            req.body.image = req.file.path;
+        } else {
+            delete req.body.image;
+        };
+
+        const category = await Categories.findByPk(Number(req.params.id));
+
+        if (!category) {
+            return res.status(404).json({
+                status: true,
+                msg: "Category not found!"
+            })
+        }
+
+        if (req.body.image) {
+            await category.update({
+                categoryName: req.body.categoryName,
+                status: req.body.status,
+                image: req.body.image
+            })
+        } else {
+            await category.update({
+                categoryName: req.body.categoryName,
+                status: req.body.status,
+            })
+        }
+
+        res.status(200).json({
+            status: true,
+            msg: "Update successful!"
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request!"
+        })
+    }
+}
+
+export const DeleteCategoryController = async (req: admin, res: Response) => {
+    try {
+        const category = await Categories.findByPk(Number(req.params.id));
+
+        if(!category) {
+            return res.status(404).json({
+                status: false,
+                msg: "Category not found!"
+            })
+        };
+
+        await category.update({
+            status: "deleted"
+        });
+
+        res.status(200).json({
+            status: true,
+            msg: "Delete successful!"
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request"
+        })
+    }
+}
+
+export const RecoveryCategoryController = async (req: admin, res: Response) => {
+    try {
+        const category = await Categories.findByPk(Number(req.params.id));
+
+        if(!category) {
+            return res.status(404).json({
+                status: false,
+                msg: "Category not found!"
+            })
+        };
+
+        await category.update({
+            status: "active"
+        });
+
+        res.status(200).json({
+            status: true,
+            msg: "Recovery successful!"
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request"
         })
     }
 }
