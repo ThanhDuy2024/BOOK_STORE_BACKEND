@@ -4,6 +4,7 @@ import { Categories } from "../../../models/categories.model";
 import { Admin } from "../../../models/admin.model";
 import { Op } from "sequelize";
 import { funcPagination } from "../../../helpers/pagination.helper";
+import moment from "moment";
 const limit = 10;
 export const CreateCategoryController = async (req: admin, res: Response) => {
     try {
@@ -11,6 +12,24 @@ export const CreateCategoryController = async (req: admin, res: Response) => {
             req.body.image = req.file.path;
         } else {
             delete req.body.image;
+        };
+
+        const category = await Categories.findOne({
+            where: {
+                categoryName: {
+                    [Op.iLike]: req.body.categoryName
+                },
+                status: {
+                    [Op.in]: ["active", "inactive"]
+                }
+            }
+        })
+
+        if(category) {
+            return res.status(400).json({
+                status: false,
+                msg: "Category has existed!"
+            })
         };
 
         await Categories.create({
@@ -63,7 +82,7 @@ export const GetCategoryController = async (req: admin, res: Response) => {
             limit: limit
         }
 
-        if (req.query.search) {
+        if (req.query.search !== "null") {
             query.where.categoryName = {
                 [Op.iLike]: `%${String(req.query.search).trim()}%`
             }
@@ -74,25 +93,53 @@ export const GetCategoryController = async (req: admin, res: Response) => {
         }
 
         if (req.query.updatedAt != "desc") {
-            query.order = [["updatedAt", 'desc']]
+            query.order = [["updatedAt", 'asc']]
         };
 
+        const totalStatus = await Categories.count({
+            where: {
+                status: {
+                    [Op.in]: ["active", "inactive"]
+                }
+            }
+        });
+
+        const totalStatusActive = await Categories.count({
+            where: {
+                status: "active"
+            }
+        });
+
+        const totalStatusInactive = await Categories.count({
+            where: {
+                status: "inactive"
+            }
+        });
 
         const totalItem = await Categories.count(query);
+        const pagination = funcPagination(Number(totalItem), Number(req.query.page), limit);
+        query.offset = pagination.skip;    
 
-        const pagination = funcPagination(Number(totalItem), Number(req.query.page), 1);
+        const categories: any = await Categories.findAll(query);
 
-        console.log(pagination);
-        query.offset = pagination.skip;
-
-        console.log(query);
-
-        const categories = await Categories.findAll(query);
+        const data: any = [];
+        for (const item of categories) {
+            const rawData: any = {
+                ...item.dataValues,
+                createdAtFormat: moment(item.dataValues.createdAt).format("HH:mm DD/MM/YYYY"),
+                updatedAtFormat: moment(item.dataValues.updatedAt).format("HH:mm DD/MM/YYYY"),
+            }
+            data.push(rawData);
+        };
 
         res.status(200).json({
             status: true,
-            data: categories
-        })
+            data: data,
+            totalPages: pagination.totalPages,
+            totalStatus: totalStatus,
+            totalStatusActive: totalStatusActive,
+            totalStatusInactive: totalStatusInactive
+        });
     } catch (error) {
         console.log(error);
         res.status(400).json({
@@ -149,7 +196,7 @@ export const DeleteCategoryController = async (req: admin, res: Response) => {
     try {
         const category = await Categories.findByPk(Number(req.params.id));
 
-        if(!category) {
+        if (!category) {
             return res.status(404).json({
                 status: false,
                 msg: "Category not found!"
@@ -177,7 +224,7 @@ export const RecoveryCategoryController = async (req: admin, res: Response) => {
     try {
         const category = await Categories.findByPk(Number(req.params.id));
 
-        if(!category) {
+        if (!category) {
             return res.status(404).json({
                 status: false,
                 msg: "Category not found!"
