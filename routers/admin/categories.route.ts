@@ -3,6 +3,7 @@ import { adminMiddleware } from "../../middlewares/admin.middleware";
 import { 
     CreateCategoryController, 
     DeleteCategoryController, 
+    GetCategoriesControllerForBooks, 
     GetCategoryController, 
     RecoveryCategoryController, 
     UpdateCategoryController 
@@ -17,6 +18,7 @@ const upload = multer({
 const route = Router();
 route.post("/", adminMiddleware, upload.single("image"), CreateCategoryController);
 route.get("/", adminMiddleware, GetCategoryController);
+route.get("/for-book", adminMiddleware, GetCategoriesControllerForBooks);
 route.put("/:id", adminMiddleware, upload.single("image"), UpdateCategoryController);
 route.delete("/:id", adminMiddleware, DeleteCategoryController);
 route.put("/recovery/:id", adminMiddleware, RecoveryCategoryController);

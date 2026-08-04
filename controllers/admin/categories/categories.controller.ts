@@ -247,3 +247,26 @@ export const RecoveryCategoryController = async (req: admin, res: Response) => {
         })
     }
 }
+
+export const GetCategoriesControllerForBooks = async (req: admin, res: Response) => {
+    try {
+        const categories = await Categories.findAll({
+            nest: true,
+            attributes: ["id", "categoryName"],
+            where: {
+                status: "active",
+            }
+        });
+
+        res.status(200).json({
+            status: true,
+            data: categories
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request"
+        })
+    }
+}
