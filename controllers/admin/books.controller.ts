@@ -300,8 +300,31 @@ export const UpdateBookController = async (req: admin, res: Response) => {
 
 export const DeleteBookController = async (req: admin, res: Response) => {
     try {
+        const  { id } = req.params;
+
+        const book = await Books.findOne({
+            where: {
+                id: id,
+                status: {
+                    [Op.in]: ["active", "inactive"]
+                }
+            }
+        });
+
+        if(!book) {
+            return res.status(404).json({
+                status: false,
+                msg: "Book not found!"
+            })
+        };
+
+        await book.update({
+            status: "deleted"
+        });
+        
         res.status(200).json({
-            status: 200
+            status: true,
+            msg: "Book has been deleted"
         })
     } catch (error) {
         console.log(error);
