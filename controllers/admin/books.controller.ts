@@ -121,13 +121,13 @@ export const GetBookController = async (req: admin, res: Response) => {
             query.order = [["updatedAt", "ASC"]];
         }
 
-        if(req.query.priceFilter !== "null") {
+        if (req.query.priceFilter !== "null") {
             query.order = [
                 ["price", String(req.query.priceFilter).toUpperCase()]
             ]
         };
 
-        if(req.query.quantityFilter !== "null") {
+        if (req.query.quantityFilter !== "null") {
             query.order = [
                 ["quantity", String(req.query.quantityFilter).toUpperCase()]
             ]
@@ -135,6 +135,17 @@ export const GetBookController = async (req: admin, res: Response) => {
 
         const page = Number(req.query.page) || 1;
         const totalItem = await Books.count(query);
+        const totalActive = await Books.count({
+            where: {
+                status: "active",
+            }
+        });
+        const totalInactive = await Books.count({
+            where: {
+                status: "inactive",
+            }
+        });
+        const totalQuantity = await Books.sum("quantity");
         const pagination = funcPagination(Number(totalItem), page, limit);
         query.offset = pagination.skip;
 
@@ -154,7 +165,11 @@ export const GetBookController = async (req: admin, res: Response) => {
         res.status(200).json({
             status: true,
             data: data,
-            totalPage: pagination.totalPages
+            totalPage: pagination.totalPages,
+            totalBook: totalItem,
+            totalActive: totalActive,
+            totalInactive: totalInactive,
+            totalQuantity: totalQuantity
         })
     } catch (error) {
         console.log(error);
@@ -167,8 +182,27 @@ export const GetBookController = async (req: admin, res: Response) => {
 
 export const DetailBookController = async (req: admin, res: Response) => {
     try {
+        const { id } = req.params;
+
+        const book: any = await Books.findOne({
+            nest: true,
+            include: [
+                {
+                    model: Categories,
+                    as: "categories",
+                    attributes: ["id", "categoryName"]
+                },
+            ],
+            where: {
+                id: id,
+                status: {
+                    [Op.in]: ["active", "inactive"]
+                }
+            }
+        });
         res.status(200).json({
-            status: 200
+            status: true,
+            data: book.dataValues
         })
     } catch (error) {
         console.log(error);
@@ -181,8 +215,79 @@ export const DetailBookController = async (req: admin, res: Response) => {
 
 export const UpdateBookController = async (req: admin, res: Response) => {
     try {
+        const { id } = req.params;
+        const book = await Books.findOne({
+            where: {
+                id: id,
+                status: {
+                    [Op.in]: ["active", "inactive"]
+                }
+            }
+        });
+
+        if (!book) {
+            return res.status(404).json({
+                status: false,
+                msg: "Book not found!"
+            })
+        };
+
+        if (req.file) {
+            req.body.image = req.file.path;
+        } else {
+            delete req.body.image;
+        }
+
+        const categories = req.body.categories
+        const checkCategories = await Categories.findAll({
+            where: {
+                id: {
+                    [Op.in]: categories
+                }
+            }
+        });
+
+        if (checkCategories.length === 0) {
+            return res.status(404).json({
+                status: false,
+                msg: "Categories not found!"
+            })
+        };
+
+        await Books.update({
+            bookName: req.body.bookName,
+            quantity: Number(req.body.quantity),
+            author: req.body.author,
+            publishing: req.body.publishing,
+            price: Number(req.body.price),
+            publication: moment(req.body.publication).format("DD/MM/YYYY"),
+            status: req.body.status,
+            image: req.body.image || book.dataValues.image,
+            description: req.body.description,
+            createdBy: req.admin.id,
+            updatedBy: req.admin.id,
+        }, {
+            where: {
+                id: id,
+            }
+        })
+
+        await Books_Categories.destroy({
+            where: {
+                bookId: id,
+            }
+        });
+
+        const categoriesData = categories.map((item: any) => ({
+            bookId: id,
+            categoryId: item
+        }));
+
+        await Books_Categories.bulkCreate(categoriesData)
+
         res.status(200).json({
-            status: 200
+            status: true,
+            msg: "Book has been updated!"
         })
     } catch (error) {
         console.log(error);
