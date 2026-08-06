@@ -34,7 +34,8 @@ export const RegisterAdminController = async (req: Request, res: Response) => {
             adminName: adminName,
             fullName: fullName,
             email: email,
-            password: hash
+            password: hash,
+            roleId: 1,
         });
 
         res.status(200).json({
