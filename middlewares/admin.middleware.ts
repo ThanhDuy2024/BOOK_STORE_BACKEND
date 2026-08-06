@@ -32,7 +32,7 @@ export const adminMiddleware = async (req: admin, res: Response, next: NextFunct
         if(!adminAccountCheck?.dataValues) {
             return res.status(404).json({
                 status: false,
-                msg: "Account not found!"
+                msg: "[Middleware] Account not found!"
             })
         };
 

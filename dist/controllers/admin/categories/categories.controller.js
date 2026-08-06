@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RecoveryCategoryController = exports.DeleteCategoryController = exports.UpdateCategoryController = exports.GetCategoryController = exports.CreateCategoryController = void 0;
+exports.GetCategoriesControllerForBooks = exports.RecoveryCategoryController = exports.DeleteCategoryController = exports.UpdateCategoryController = exports.GetCategoryController = exports.CreateCategoryController = void 0;
 const categories_model_1 = require("../../../models/categories.model");
 const admin_model_1 = require("../../../models/admin.model");
 const sequelize_1 = require("sequelize");
@@ -248,3 +248,26 @@ const RecoveryCategoryController = (req, res) => __awaiter(void 0, void 0, void 
     }
 });
 exports.RecoveryCategoryController = RecoveryCategoryController;
+const GetCategoriesControllerForBooks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const categories = yield categories_model_1.Categories.findAll({
+            nest: true,
+            attributes: ["id", "categoryName"],
+            where: {
+                status: "active",
+            }
+        });
+        res.status(200).json({
+            status: true,
+            data: categories
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request"
+        });
+    }
+});
+exports.GetCategoriesControllerForBooks = GetCategoriesControllerForBooks;

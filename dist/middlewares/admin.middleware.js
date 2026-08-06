@@ -41,7 +41,7 @@ const adminMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (!(adminAccountCheck === null || adminAccountCheck === void 0 ? void 0 : adminAccountCheck.dataValues)) {
             return res.status(404).json({
                 status: false,
-                msg: "Account not found!"
+                msg: "[Middleware] Account not found!"
             });
         }
         ;

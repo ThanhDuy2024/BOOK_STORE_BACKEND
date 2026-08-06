@@ -56,11 +56,15 @@ exports.Books = database_1.sequelize.define("books", {
 });
 admin_model_1.Admin.hasMany(exports.Books, {
     foreignKey: "createdBy",
-    as: "createdCategories"
+    as: "createdBooks"
 });
 exports.Books.belongsTo(admin_model_1.Admin, {
     foreignKey: "createdBy",
     as: "creator"
+});
+admin_model_1.Admin.hasMany(exports.Books, {
+    foreignKey: "updatedBy",
+    as: "updatedBooks"
 });
 exports.Books.belongsTo(admin_model_1.Admin, {
     foreignKey: "updatedBy",

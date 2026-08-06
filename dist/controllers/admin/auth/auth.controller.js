@@ -43,7 +43,8 @@ const RegisterAdminController = (req, res) => __awaiter(void 0, void 0, void 0, 
             adminName: adminName,
             fullName: fullName,
             email: email,
-            password: hash
+            password: hash,
+            roleId: 1,
         });
         res.status(200).json({
             status: true,
