@@ -325,3 +325,25 @@ export const RecoveryAdminController = async (req: admin, res: Response) => {
         })
     }
 }
+
+export const GetRoleInAdminController = async (req: admin, res: Response) => {
+    try {
+        const roles = await Roles.findAll({
+            where: {
+                status: {
+                    [Op.in]: ["active"]
+                }
+            }
+        });
+        res.status(200).json({
+            status: true,
+            data: roles
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request!"
+        })
+    }
+}
