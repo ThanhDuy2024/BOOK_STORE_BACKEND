@@ -6,7 +6,9 @@ import { Admin } from "../../models/admin.model";
 import bcrypt from "bcryptjs";
 import { Roles } from "../../models/roles.model";
 import { Op } from "sequelize";
-
+import moment from "moment";
+import { funcPagination } from "../../helpers/pagination.helper";
+const limit = 10;
 export const RenderCreateAdminOtp = async (req: admin, res: Response) => {
     try {
         const { email } = req.body;
@@ -28,14 +30,15 @@ export const RenderCreateAdminOtp = async (req: admin, res: Response) => {
 
 export const CreateAdminController = async (req: admin, res: Response) => {
     try {
-        const checkOtp = cache.get(`${req.body.otp}`);
+        console.log(req.body);
+        // const checkOtp = cache.get(`${req.body.otp}`);
 
-        if (!checkOtp) {
-            return res.status(404).json({
-                status: false,
-                msg: "Otp expire or wrong!"
-            })
-        };
+        // if (!checkOtp) {
+        //     return res.status(404).json({
+        //         status: false,
+        //         msg: "Otp expire or wrong!"
+        //     })
+        // };
 
         if (req.file) {
             req.body.image = req.file.path;
@@ -52,9 +55,23 @@ export const CreateAdminController = async (req: admin, res: Response) => {
         if (checkAccount) {
             return res.status(400).json({
                 status: false,
-                msg: "Admin name was being exist!"
+                msg: "Admin account was being exist!"
             })
         }
+
+        const checkEmail = await Admin.findOne({
+            where: {
+                email: req.body.email,
+            }
+        });
+
+        if (checkEmail) {
+            return res.status(400).json({
+                status: false,
+                msg: "Admin account was being exist!"
+            })
+        }
+
 
         const checkRole = await Roles.findOne({
             where: {
@@ -102,9 +119,69 @@ export const CreateAdminController = async (req: admin, res: Response) => {
 
 export const GetAdminController = async (req: admin, res: Response) => {
     try {
+        const query: any = {
+            nest: true,
+            include: [
+                {
+                    model: Roles,
+                    as: "role",
+                    attributes: ["id", "roleName"],
+                }
+            ],
+            where: {
+                status: {
+                    [Op.in]: ["active", "inactive"]
+                }
+            },
+            order: [
+                ["createdAt", "DESC"]
+            ],
+            limit: limit,
+            offset: 0,
+        }
+
+        if (req.query.search != "null") {
+            query.where.adminName = {
+                [Op.iLike]: `%${req.query.search}%`
+            }
+        };
+
+        if (req.query.status != "all") {
+            query.where.status = req.query.status;
+        };
+
+        if (req.query.createdAtFilter == "desc") {
+            query.order = [
+                ["createdAt", "DESC"]
+            ]
+        } else {
+            query.order = [
+                ["createdAt", "ASC"]
+            ]
+        }
+
+        const page = req.query.page || 1;
+        const totalItem = await Admin.count(query);
+        const pagination = funcPagination(totalItem, page, limit);
+        query.offset = pagination.skip;
+        const account = await Admin.findAll(query);
+
+        const data: any = [];
+
+        for (const item of account) {
+            const rawData: any = {
+                ...item.dataValues,
+                createdAtFormat: moment(item.dataValues.createdAt).format("HH:mm DD/MM/YYYY"),
+                updatedAtFormat: moment(item.dataValues.updatedAtFormat).format("HH:mm DD/MM/YYYY")
+            };
+
+            data.push(rawData);
+        }
+
         res.status(200).json({
             status: true,
-            msg: "Admin has been created!"
+            data: data,
+            totalPage: pagination.totalPages,
         })
     } catch (error) {
         console.log(error);
