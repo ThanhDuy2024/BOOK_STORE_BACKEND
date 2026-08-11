@@ -15,6 +15,10 @@ exports.Books = database_1.sequelize.define("books", {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false
     },
+    totalSale: {
+        type: sequelize_1.DataTypes.INTEGER,
+        defaultValue: 0
+    },
     author: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
