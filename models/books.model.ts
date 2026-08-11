@@ -13,6 +13,10 @@ export const Books = sequelize.define("books", {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    totalSale: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+    },
     author: {
         type: DataTypes.STRING,
         allowNull: false,

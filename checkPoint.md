@@ -1,0 +1,8 @@
+### Admin Pages
+## DASHBOARD
+## CRUD CATEGORIES, BOOKS, USERS
+## SEND OTP EMAIL (Nodemailer)
+
+### Client Pages
+## LOGIN, REGISTER, SEND OTP 
+## BOOKS LIST, BOOK DETAIL

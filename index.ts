@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from "express";
 import cors from "cors";
 import adminRoute from "./routers/admin/index.route";
+import clientRoute from "./routers/client/index.route";
 import { connectDatabase } from "./configs/database";
 
 const app = express();
@@ -18,7 +19,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use("/api/admin", adminRoute);
-
+app.use("/api/client", clientRoute);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })

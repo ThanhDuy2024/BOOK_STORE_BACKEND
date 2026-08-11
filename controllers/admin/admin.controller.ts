@@ -30,7 +30,6 @@ export const RenderCreateAdminOtp = async (req: admin, res: Response) => {
 
 export const CreateAdminController = async (req: admin, res: Response) => {
     try {
-        console.log(req.body);
         // const checkOtp = cache.get(`${req.body.otp}`);
 
         // if (!checkOtp) {
