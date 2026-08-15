@@ -154,7 +154,13 @@ const GetBookController = (req, res) => __awaiter(void 0, void 0, void 0, functi
                 status: "inactive",
             }
         });
-        const totalQuantity = yield books_model_1.Books.sum("quantity");
+        const totalQuantity = yield books_model_1.Books.sum("quantity", {
+            where: {
+                status: {
+                    [sequelize_1.Op.in]: ["active", "inactive"]
+                }
+            }
+        });
         const pagination = (0, pagination_helper_1.funcPagination)(Number(totalItem), page, limit);
         query.offset = pagination.skip;
         const books = yield books_model_1.Books.findAll(query);
