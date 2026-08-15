@@ -45,4 +45,5 @@ BOOK_STORE_BACKEND/
 ├── helpers/            # Các hàm tiện ích bổ trợ
 ├── .gitignore          # Các file/thư mục bỏ qua khi push git
 ├── index.ts            # File khởi chạy server chính
-└── package.json        # Thông tin phụ thuộc và các câu lệnh scripts
+├── package.json        # Thông tin phụ thuộc và các câu lệnh scripts
+└── tsconfig.json       # Cấu hình typescript
