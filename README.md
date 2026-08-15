@@ -26,7 +26,7 @@ Dự án **Book Store Backend**
 
 * **Runtime Environment:** [Node.js](https://nodejs.org/)
 * **Web Framework:** [Express.js](https://expressjs.com/)
-* **Database:** [MongoDB](https://www.mongodb.com/) (sử dụng [Mongoose ORM](https://mongoosejs.com/))
+* **Database:**  [Postgresql]
 * **Authentication:** [JSON Web Token (JWT)](https://jwt.io/) & `bcryptjs`
 * **File Upload:** `Multer` / Cloudinary
 * **Dev Tools:** `Nodemon`, `dotenv`, `cors`
