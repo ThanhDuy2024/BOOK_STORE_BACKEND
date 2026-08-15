@@ -26,6 +26,10 @@ export const Orders = sequelize.define("orders", {
     totalAmount: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    status: {
+        type: DataTypes.STRING,
+        defaultValue: "init"
     }
 }, {
     timestamps: true
