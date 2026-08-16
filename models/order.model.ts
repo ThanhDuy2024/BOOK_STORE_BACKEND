@@ -23,6 +23,10 @@ export const Orders = sequelize.define("orders", {
         type: DataTypes.STRING,
         allowNull: false
     },
+    paymentStatus: {
+        type: DataTypes.STRING,
+        defaultValue: "unpaid"
+    },
     totalAmount: {
         type: DataTypes.STRING,
         allowNull: false
