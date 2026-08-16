@@ -7,6 +7,7 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 import moment from "moment";
 import { ZALOPAY_CONFIG } from "../../configs/zalopay"
+import { sendOrderSuccessNodemailer } from "../../helpers/nodemailer.helper";
 export const PostOrderClientController = async (req: Request, res: Response) => {
     try {
         let redFlag: boolean = true;
@@ -58,6 +59,8 @@ export const PostOrderClientController = async (req: Request, res: Response) => 
                 { where: { id: item.id } }
             )
         }
+
+        sendOrderSuccessNodemailer(req.body.customer.email, order.dataValues.id);
 
         res.status(200).json({
             status: true,
@@ -167,6 +170,16 @@ export const PostOrderZaloClientController = async (req: Request, res: Response)
             paymentStatus: "paid"
         });
 
+        for (const item of req.body.items) {
+            // Sửa câu lệnh update của bạn thành:
+            await Books.update(
+                {
+                    totalSale: literal(`"totalSale" + ${item.buyQuantity}`) // 👈 Bọc "totalSale" trong ngoặc kép
+                },
+                { where: { id: item.id } }
+            );
+        }
+        sendOrderSuccessNodemailer(req.body.customer.email, orderItem.dataValues.id);
     } catch (error) {
         console.log(error);
         res.status(400).json({
