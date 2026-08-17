@@ -16,11 +16,11 @@ export const Customer = sequelize.define("customer", {
     },
     address: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     }, 
     phone: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     status: {
         type: DataTypes.STRING,
