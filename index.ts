@@ -4,6 +4,7 @@ import cors from "cors";
 import adminRoute from "./routers/admin/index.route";
 import clientRoute from "./routers/client/index.route";
 import { connectDatabase } from "./configs/database";
+import { limiter } from './configs/rateLimit';
 
 const app = express();
 const port = process.env.PORT;
@@ -16,10 +17,12 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'set-cookie', 'token'],
   credentials: true,
 }));
-
+app.use(limiter);
 app.use(express.json());
+
 app.use("/api/admin", adminRoute);
 app.use("/api/client", clientRoute);
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })

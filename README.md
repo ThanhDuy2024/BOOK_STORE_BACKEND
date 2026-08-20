@@ -23,6 +23,10 @@ Dự án **Book Store Backend**
   * Gửi email xác nhận đơn hàng khi đặt hàng thành công.
 * **Bình luận đánh giá sản phẩm**
   * Khách hàng có thể  đánh giá sản phẩm bằng cách bình luận.
+* **Giới hạn số lần gọi request (Rate limit)**
+  * Giới hạn số lượng request mà một IP (hoặc client) có thể gửi lên server trong một khoảng thời gian nhất định.
+  * Chống tấn công DDoS / Brute Force.
+  * Tiết kiệm chi phí API
 ---
 
 ## 🛠️ Công Nghệ Sử Dụng (Tech Stack)
