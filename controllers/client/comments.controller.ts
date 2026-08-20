@@ -4,6 +4,7 @@ import { Comments } from "../../models/comments.model";
 import { client } from "../../interfaces/client.interface";
 import moment from "moment";
 import { Customer } from "../../models/customer.model";
+import { funcPagination } from "../../helpers/pagination.helper";
 
 export const PostCommentClientController = async (req: client, res: Response) => {
     try {
@@ -41,7 +42,7 @@ export const PostCommentClientController = async (req: client, res: Response) =>
 
 export const GetAllCommentClientInProductController = async (req: Request, res: Response) => {
     try {
-        const comments = await Comments.findAll({
+        const query: any = {
             include: [
                 {
                     model: Customer,
@@ -55,8 +56,19 @@ export const GetAllCommentClientInProductController = async (req: Request, res: 
             },
             order: [
                 ["createdAt", "DESC"]
-            ]
-        });
+            ],
+            offset: 0,
+            limit: req.query.limit || 5
+        };
+
+        const totalItem = await Comments.count(query);
+        const page = req.query.page || 1
+        const limit = req.query.limit || 5
+        const pagination = funcPagination(totalItem, page, limit);
+    
+        query.offset = pagination.skip;
+
+        const comments = await Comments.findAll(query);
 
         const data: any = []
         for (const item of comments) {
@@ -69,7 +81,8 @@ export const GetAllCommentClientInProductController = async (req: Request, res: 
 
         res.status(200).json({
             status: true,
-            data: data
+            data: data,
+            totalPage: pagination.totalPages
         })
     } catch (error) {
         console.log(error);
