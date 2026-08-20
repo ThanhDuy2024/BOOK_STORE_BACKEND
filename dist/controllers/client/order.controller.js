@@ -21,6 +21,7 @@ const axios_1 = __importDefault(require("axios"));
 const crypto_js_1 = __importDefault(require("crypto-js"));
 const moment_1 = __importDefault(require("moment"));
 const zalopay_1 = require("../../configs/zalopay");
+const nodemailer_helper_1 = require("../../helpers/nodemailer.helper");
 const PostOrderClientController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let redFlag = true;
@@ -65,6 +66,7 @@ const PostOrderClientController = (req, res) => __awaiter(void 0, void 0, void 0
             });
             yield books_model_1.Books.update({ quantity: (0, sequelize_1.literal)(`quantity - ${item.buyQuantity}`) }, { where: { id: item.id } });
         }
+        (0, nodemailer_helper_1.sendOrderSuccessNodemailer)(req.body.customer.email, order.dataValues.id);
         res.status(200).json({
             status: true,
             msg: "Order successful!"
@@ -159,6 +161,13 @@ const PostOrderZaloClientController = (req, res) => __awaiter(void 0, void 0, vo
         yield orderItem.update({
             paymentStatus: "paid"
         });
+        for (const item of req.body.items) {
+            // Sửa câu lệnh update của bạn thành:
+            yield books_model_1.Books.update({
+                totalSale: (0, sequelize_1.literal)(`"totalSale" + ${item.buyQuantity}`) // 👈 Bọc "totalSale" trong ngoặc kép
+            }, { where: { id: item.id } });
+        }
+        (0, nodemailer_helper_1.sendOrderSuccessNodemailer)(req.body.customer.email, orderItem.dataValues.id);
     }
     catch (error) {
         console.log(error);

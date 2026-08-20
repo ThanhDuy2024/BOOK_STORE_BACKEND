@@ -18,11 +18,11 @@ exports.Customer = database_1.sequelize.define("customer", {
     },
     address: {
         type: sequelize_1.DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     phone: {
         type: sequelize_1.DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     status: {
         type: sequelize_1.DataTypes.STRING,
