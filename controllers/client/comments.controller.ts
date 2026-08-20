@@ -52,7 +52,10 @@ export const GetAllCommentClientInProductController = async (req: Request, res: 
             where: {
                 productId: req.params.id,
                 status: "active"
-            }
+            },
+            order: [
+                ["createdAt", "DESC"]
+            ]
         });
 
         const data: any = []
