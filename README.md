@@ -21,6 +21,8 @@ Dự án **Book Store Backend**
   * Khách hàng có thể thanh toán khi nhận hàng.
   * Khách hàng có thể thanh toán trực tiếp qua zalopay.
   * Gửi email xác nhận đơn hàng khi đặt hàng thành công.
+* **Bình luận đánh giá sản phẩm**
+  * Khách hàng có thể  đánh giá sản phẩm bằng cách bình luận.
 ---
 
 ## 🛠️ Công Nghệ Sử Dụng (Tech Stack)
