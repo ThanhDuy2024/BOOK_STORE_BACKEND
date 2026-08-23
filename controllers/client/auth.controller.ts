@@ -112,7 +112,8 @@ export const LoginClientController = async (req: Request, res: Response) => {
                 fullName: account?.dataValues.fullName,
                 email: account?.dataValues.email,
                 address: account?.dataValues.address,
-                phone: account?.dataValues.phone
+                phone: account?.dataValues.phone,
+                image: account?.dataValues.image || "",
             },
             clientToken: clientToken
         });

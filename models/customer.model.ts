@@ -17,8 +17,12 @@ export const Customer = sequelize.define("customer", {
     address: {
         type: DataTypes.STRING,
         allowNull: true
-    }, 
+    },
     phone: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    image: {
         type: DataTypes.STRING,
         allowNull: true
     },
