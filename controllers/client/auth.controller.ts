@@ -4,6 +4,7 @@ import { cache } from "../../helpers/nodeCache.helper";
 import { Customer } from "../../models/customer.model";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { client } from "../../interfaces/client.interface";
 export const RenderOtpClientController = async (req: Request, res: Response) => {
     try {
         const { email } = req.body;
@@ -102,7 +103,7 @@ export const LoginClientController = async (req: Request, res: Response) => {
         const clientToken = jwt.sign({
             id: account?.dataValues.id,
             fullName: account?.dataValues.fullName,
-        }, String(process.env.JWT_CLIENT), { expiresIn: 30 * 24 * 60 * 60});
+        }, String(process.env.JWT_CLIENT), { expiresIn: 30 * 24 * 60 * 60 });
 
         res.status(200).json({
             status: true,
@@ -122,6 +123,28 @@ export const LoginClientController = async (req: Request, res: Response) => {
         res.status(404).json({
             status: false,
             msg: "Email or password wrong!"
+        })
+    }
+}
+
+export const ProfileClientController = async (req: client, res: Response) => {
+    try {
+        res.status(200).json({
+            status: true,
+            data: {
+                id: req.client.id,
+                fullName: req.client.fullName,
+                email: req.client.email,
+                address: req.client.address,
+                phone: req.client.phone,
+                image: req.client.image || "",
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "bad request"
         })
     }
 }
