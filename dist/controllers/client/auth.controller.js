@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginClientController = exports.RegisterClientController = exports.RenderOtpClientController = void 0;
+exports.ProfileClientEditController = exports.ProfileClientController = exports.LoginClientController = exports.RegisterClientController = exports.RenderOtpClientController = void 0;
 const nodemailer_helper_1 = require("../../helpers/nodemailer.helper");
 const nodeCache_helper_1 = require("../../helpers/nodeCache.helper");
 const customer_model_1 = require("../../models/customer.model");
@@ -49,7 +49,7 @@ const RegisterClientController = (req, res) => __awaiter(void 0, void 0, void 0,
             });
         }
         ;
-        const { fullName, email, password, address, phone } = req.body;
+        const { fullName, email, password } = req.body;
         const checkEmail = yield customer_model_1.Customer.findOne({
             where: {
                 email: email
@@ -68,8 +68,6 @@ const RegisterClientController = (req, res) => __awaiter(void 0, void 0, void 0,
             fullName: fullName,
             email: email,
             password: hash,
-            address: address,
-            phone: phone
         });
         res.status(200).json({
             status: true,
@@ -120,7 +118,8 @@ const LoginClientController = (req, res) => __awaiter(void 0, void 0, void 0, fu
                 fullName: account === null || account === void 0 ? void 0 : account.dataValues.fullName,
                 email: account === null || account === void 0 ? void 0 : account.dataValues.email,
                 address: account === null || account === void 0 ? void 0 : account.dataValues.address,
-                phone: account === null || account === void 0 ? void 0 : account.dataValues.phone
+                phone: account === null || account === void 0 ? void 0 : account.dataValues.phone,
+                image: (account === null || account === void 0 ? void 0 : account.dataValues.image) || "",
             },
             clientToken: clientToken
         });
@@ -134,3 +133,69 @@ const LoginClientController = (req, res) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.LoginClientController = LoginClientController;
+const ProfileClientController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        res.status(200).json({
+            status: true,
+            data: {
+                id: req.client.id,
+                fullName: req.client.fullName,
+                email: req.client.email,
+                address: req.client.address,
+                phone: req.client.phone,
+                image: req.client.image || "",
+            }
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "bad request"
+        });
+    }
+});
+exports.ProfileClientController = ProfileClientController;
+const ProfileClientEditController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.client;
+        const account = yield customer_model_1.Customer.findOne({
+            where: {
+                id: id,
+                status: "active"
+            }
+        });
+        if (!account) {
+            return res.status(404).json({
+                status: false,
+                msg: "Account not found!"
+            });
+        }
+        ;
+        if (req.file) {
+            req.body.image = req.file.path;
+        }
+        else {
+            delete req.body.image;
+        }
+        const { fullName, address, phone } = req.body;
+        yield account.update({
+            fullName: fullName,
+            address: address,
+            phone: phone,
+            image: req.body.image || account.dataValues.image
+        });
+        res.status(200).json({
+            status: true,
+            msg: "Your profile has been edited!"
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request!"
+        });
+    }
+});
+exports.ProfileClientEditController = ProfileClientEditController;

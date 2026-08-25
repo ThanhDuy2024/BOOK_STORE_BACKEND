@@ -59,7 +59,7 @@ const GetAllCommentClientInProductController = (req, res) => __awaiter(void 0, v
                 {
                     model: customer_model_1.Customer,
                     as: 'customer',
-                    attributes: ["id", "fullName"]
+                    attributes: ["id", "fullName", "image"]
                 }
             ],
             where: {

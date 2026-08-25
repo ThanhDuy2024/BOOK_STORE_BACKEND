@@ -24,6 +24,10 @@ exports.Customer = database_1.sequelize.define("customer", {
         type: sequelize_1.DataTypes.STRING,
         allowNull: true
     },
+    image: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true
+    },
     status: {
         type: sequelize_1.DataTypes.STRING,
         defaultValue: "active"
