@@ -36,7 +36,7 @@ export const RegisterClientController = async (req: Request, res: Response) => {
             })
         };
 
-        const { fullName, email, password, address, phone } = req.body;
+        const { fullName, email, password } = req.body;
 
         const checkEmail = await Customer.findOne({
             where: {
@@ -58,8 +58,6 @@ export const RegisterClientController = async (req: Request, res: Response) => {
             fullName: fullName,
             email: email,
             password: hash,
-            address: address,
-            phone: phone
         });
 
         res.status(200).json({
