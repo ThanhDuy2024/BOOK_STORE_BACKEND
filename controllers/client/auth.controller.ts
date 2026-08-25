@@ -146,3 +146,50 @@ export const ProfileClientController = async (req: client, res: Response) => {
         })
     }
 }
+
+export const ProfileClientEditController = async (req: client, res: Response) => {
+    try {
+        const { id } = req.client;
+
+        const account = await Customer.findOne({
+            where: {
+                id: id,
+                status: "active"
+            }
+        });
+
+        if(!account) {
+            return res.status(404).json({
+                status: false,
+                msg: "Account not found!"
+            })
+        };
+
+        if(req.file) {
+            req.body.image = req.file.path;
+        } else {
+            delete req.body.image;
+        }
+
+        const { fullName, address, phone } = req.body;
+
+
+        await account.update({
+            fullName: fullName,
+            address: address,
+            phone: phone,
+            image: req.body.image || account.dataValues.image
+        });
+
+        res.status(200).json({
+            status: true,
+            msg: "Your profile has been edited!"
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request!"
+        })
+    }
+}
