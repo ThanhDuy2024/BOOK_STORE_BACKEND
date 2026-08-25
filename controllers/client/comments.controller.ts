@@ -47,7 +47,7 @@ export const GetAllCommentClientInProductController = async (req: Request, res: 
                 {
                     model: Customer,
                     as: 'customer',
-                    attributes: ["id", "fullName"]
+                    attributes: ["id", "fullName", "image"]
                 }
             ],
             where: {
