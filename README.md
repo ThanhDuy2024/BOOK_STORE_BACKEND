@@ -44,8 +44,8 @@ Dự án **Book Store Backend**
 * **Bình luận đánh giá sản phẩm**
   * Khách hàng có thể  đánh giá sản phẩm bằng cách bình luận.
   * Lưu ý khách hàng phải đăng nhập để có thể bình luận.
-* **Xem danh sách sản phẩm**
-  * Khách hàng có thể tìm kiếm, xem, danh sách sản phẩm khi sản phẩm đó còn hàng.
+* **Thao tác trên trang danh sách sản phẩm**
+  * Khách hàng có thể tìm kiếm, xem, lọc, danh sách sản phẩm khi sản phẩm đó còn hàng.
 ---
 
 ## 🛠️ Công Nghệ Sử Dụng (Tech Stack)
