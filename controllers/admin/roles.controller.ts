@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { admin } from "../../interfaces/admin.interface";
 import { Roles } from "../../models/roles.model";
 import { Op } from "sequelize";
@@ -6,7 +6,7 @@ import { Admin } from "../../models/admin.model";
 import moment from "moment";
 import { funcPagination } from "../../helpers/pagination.helper";
 const limit = 10;
-export const CreateRoleController = async (req: admin, res: Response) => {
+export const CreateRoleController = async (req: Request, res: Response) => {
     try {
         const { roleName, permission } = req.body;
 
@@ -30,8 +30,8 @@ export const CreateRoleController = async (req: admin, res: Response) => {
             roleName: roleName,
             permission: permission,
             status: req.body.status,
-            createdBy: req.admin.id,
-            updatedBy: req.admin.id
+            createdBy: 1,
+            updatedBy: 1
         });
 
         res.status(200).json({

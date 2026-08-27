@@ -53,32 +53,32 @@ export const Admin = sequelize.define(
 );
 
 
-Admin.belongsTo(Roles, {
-    foreignKey: "roleId",
-    as: "role",
-});
+// Admin.belongsTo(Roles, {
+//     foreignKey: "roleId",
+//     as: "role",
+// });
 
-Roles.hasMany(Admin, {
-    foreignKey: "roleId",
-    as: "admins",
-});
+// Roles.hasMany(Admin, {
+//     foreignKey: "roleId",
+//     as: "admins",
+// });
 
-Admin.hasMany(Roles, {
-    foreignKey: "createdBy",
-    as: "createdRoles",
-});
+// Admin.hasMany(Roles, {
+//     foreignKey: "createdBy",
+//     as: "createdRoles",
+// });
 
-Roles.belongsTo(Admin, {
-    foreignKey: "createdBy",
-    as: "creator",
-});
+// Roles.belongsTo(Admin, {
+//     foreignKey: "createdBy",
+//     as: "creator",
+// });
 
-Admin.hasMany(Roles, {
-    foreignKey: "updatedBy",
-    as: "updatedRoles",
-});
+// Admin.hasMany(Roles, {
+//     foreignKey: "updatedBy",
+//     as: "updatedRoles",
+// });
 
-Roles.belongsTo(Admin, {
-    foreignKey: "updatedBy",
-    as: "updater",
-});
+// Roles.belongsTo(Admin, {
+//     foreignKey: "updatedBy",
+//     as: "updater",
+// });
