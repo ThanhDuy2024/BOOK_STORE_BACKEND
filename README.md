@@ -21,6 +21,9 @@ Dự án **Book Store Backend**
 * **Quản lý sản phẩm** 
   * Người quản trị có thể thêm, xóa, cập nhật và chỉnh sửa sản phẩm để đưa lên trang client.
   * Hiện tại trang quản lý sản phẩm bao gồm có trang quản lý danh mục, quản lý sách.
+* **Tính năng phân trang**
+  * Tính năng này sẽ giúp giới hạn việc truy vấn quá nhiều dữ liệu.
+  * Giúp việc truy vấn dữ liệu lớn không bị lâu và quá tải.
 * **Giới hạn số lần gọi request (Rate limit)**
   * Giới hạn số lượng request mà một IP (hoặc client) có thể gửi lên server trong một khoảng thời gian nhất định.
   * Chống tấn công DDoS / Brute Force.
