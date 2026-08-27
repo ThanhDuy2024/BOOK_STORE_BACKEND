@@ -33,10 +33,10 @@ Dự án **Book Store Backend**
   * Mã hóa mật khẩu an toàn với `bcrypt`.
   * Đăng nhập (hỗ trợ JWT - JSON Web Token).
 * **Quản lý đơn hàng (Order Management)**
-  * 1. Khách hàng sẽ thêm sản phẩm vào giỏ hàng.
-  * 2. Khách hàng ấn vào nút đặt hàng.
-  * 3. Khách hàng điền các thông tin như, email, số điện thoại, địa chỉ.
-  * 4. Chọn phương thức thanh toán rồi bấm xác nhận.
+  1. Khách hàng sẽ thêm sản phẩm vào giỏ hàng.
+  2. Khách hàng ấn vào nút đặt hàng.
+  3. Khách hàng điền các thông tin như, email, số điện thoại, địa chỉ.
+  4. Chọn phương thức thanh toán rồi bấm xác nhận.
 * **Phương thức thanh toán (Payment)**
   * Khách hàng có thể thanh toán khi nhận hàng.
   * Khách hàng có thể thanh toán trực tiếp qua zalopay.
@@ -44,6 +44,8 @@ Dự án **Book Store Backend**
 * **Bình luận đánh giá sản phẩm**
   * Khách hàng có thể  đánh giá sản phẩm bằng cách bình luận.
   * Lưu ý khách hàng phải đăng nhập để có thể bình luận.
+* **Xem danh sách sản phẩm**
+  * Khách hàng có thể tìm kiếm, xem, danh sách sản phẩm khi sản phẩm đó còn hàng.
 ---
 
 ## 🛠️ Công Nghệ Sử Dụng (Tech Stack)
