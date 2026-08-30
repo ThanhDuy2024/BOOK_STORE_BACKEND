@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder # Lấy stage có devDependencies (chứa nodemon & ts-node)
+    container_name: books_store_backend
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app # Đồng bộ code từ máy local vào container
+      - /app/node_modules # Tránh đè thư mục node_modules của container
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      # Nếu dùng nodemon trên Linux/Docker bị trễ, mở comment dòng bên dưới:
+      - CHOKIDAR_USEPOLLING=true 
+    env_file:
+      - .env
+    command: npm run dev # Ghi đè lệnh khởi chạy bằng Nodemon
