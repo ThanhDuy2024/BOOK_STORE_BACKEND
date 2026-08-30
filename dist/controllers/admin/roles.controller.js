@@ -40,8 +40,8 @@ const CreateRoleController = (req, res) => __awaiter(void 0, void 0, void 0, fun
             roleName: roleName,
             permission: permission,
             status: req.body.status,
-            createdBy: req.admin.id,
-            updatedBy: req.admin.id
+            createdBy: 1,
+            updatedBy: 1
         });
         res.status(200).json({
             status: true,

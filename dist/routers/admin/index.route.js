@@ -15,5 +15,5 @@ route.use("/auth", auth_route_1.default);
 route.use("/categories", categories_route_1.default);
 route.use("/books", admin_middleware_1.adminMiddleware, book_route_1.default);
 route.use("/account", admin_middleware_1.adminMiddleware, admin_route_1.default);
-route.use("/roles", admin_middleware_1.adminMiddleware, roles_route_1.default);
+route.use("/roles", roles_route_1.default);
 exports.default = route;

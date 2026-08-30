@@ -178,11 +178,10 @@ const ProfileClientEditController = (req, res) => __awaiter(void 0, void 0, void
         else {
             delete req.body.image;
         }
-        const { fullName, address, phone } = req.body;
         yield account.update({
-            fullName: fullName,
-            address: address,
-            phone: phone,
+            fullName: req.body.fullName,
+            address: req.body.address,
+            phone: req.body.phone,
             image: req.body.image || account.dataValues.image
         });
         res.status(200).json({

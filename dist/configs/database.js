@@ -11,10 +11,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectDatabase = exports.sequelize = void 0;
 const sequelize_1 = require("sequelize");
-exports.sequelize = new sequelize_1.Sequelize(String(process.env.PG_DATABASE), String(process.env.PG_USER), String(process.env.PG_PASSWORD), {
-    host: 'localhost',
-    port: 5432,
-    dialect: 'postgres'
+// export const sequelize = new Sequelize(String(process.env.PG_DATABASE), String(process.env.PG_USER), String(process.env.PG_PASSWORD), {
+//   host: 'localhost',
+//   port: 5432,
+//   dialect: 'postgres'
+// });
+exports.sequelize = new sequelize_1.Sequelize(String(process.env.DATABASE_URL), {
+    dialect: 'postgres',
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false
+        }
+    }
 });
 const connectDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
