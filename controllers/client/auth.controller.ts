@@ -171,13 +171,10 @@ export const ProfileClientEditController = async (req: client, res: Response) =>
             delete req.body.image;
         }
 
-        const { fullName, address, phone } = req.body;
-
-
         await account.update({
-            fullName: fullName,
-            address: address,
-            phone: phone,
+            fullName: req.body.fullName,
+            address: req.body.address,
+            phone: req.body.phone,
             image: req.body.image || account.dataValues.image
         });
 
