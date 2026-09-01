@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { orderSuccessHtml } from "./htmlContent.helper";
 
 export const sendOtpNodemailer = (userEmail: any, otp: any, html: any) => {
     const transporter = nodemailer.createTransport({
@@ -42,10 +43,7 @@ export const sendOrderSuccessNodemailer = (userEmail: any, orderId: any) => {
         from: process.env.MAIN_MAIL,
         to: userEmail,
         subject: 'Xác nhận đơn hàng từ cửa hàng book store',
-        html: `
-            Cảm ơn bạn đã đặt hàng tại cửa hàng book store của chúng tôi sau đây là mã xác nhận đơn
-            hàng của bạn ${orderId}
-        `
+        html: orderSuccessHtml(orderId)
     };
 
     transporter.sendMail(mailOptions, function (error: any, info: any) {

@@ -8,12 +8,13 @@ import { Roles } from "../../models/roles.model";
 import { Op } from "sequelize";
 import moment from "moment";
 import { funcPagination } from "../../helpers/pagination.helper";
+import { otpHtml } from "../../helpers/htmlContent.helper";
 const limit = 10;
 export const RenderCreateAdminOtp = async (req: admin, res: Response) => {
     try {
         const { email } = req.body;
         const otp = Math.floor(100000 + Math.random() * 900000);
-        sendOtpNodemailer(email, otp, `Mã OTP kích hoạt tài khoản là<p>${otp}</p>`)
+        sendOtpNodemailer(email, otp, otpHtml(otp))
         cache.set(`${otp}`, email, 120);
         res.status(200).json({
             status: true,
