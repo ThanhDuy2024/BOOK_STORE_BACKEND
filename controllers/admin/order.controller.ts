@@ -4,6 +4,7 @@ import { Orders } from "../../models/order.model";
 import { Op } from "sequelize";
 import moment from "moment";
 import { funcPagination } from "../../helpers/pagination.helper";
+import { Orders_items } from "../../models/orders_items.model";
 
 export const GetAllOrderAdminController = async (req: admin, res: Response) => {
     try {
@@ -76,6 +77,48 @@ export const GetAllOrderAdminController = async (req: admin, res: Response) => {
             status: false,
             msg: "Bad request"
 
+        })
+    }
+}
+
+export const GetDetailOrderAdminController = async (req: admin, res: Response) => {
+    try {
+        const order = await Orders.findOne({
+            include: [
+                {
+                    model: Orders_items,
+                    as: "items"
+                }
+            ],
+            where: {
+                id: Number(req.params.id),
+                status: {
+                    [Op.notIn]: ["deleted"]
+                }
+            }
+        });
+
+        if(!order) {
+            return res.status(404).json({
+                status: false,
+                msg: "Order not found!"
+            })
+        };
+
+        const data: any = {
+            ...order?.dataValues,
+            createdAtFormat: moment(order.dataValues.createdAt).format("HH:mm DD/MM/YYYY"),
+        };
+
+        res.status(200).json({
+            status: true,
+            data: data
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request!"
         })
     }
 }
