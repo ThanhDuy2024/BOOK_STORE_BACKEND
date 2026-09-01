@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendOrderSuccessNodemailer = exports.sendOtpNodemailer = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
+const htmlContent_helper_1 = require("./htmlContent.helper");
 const sendOtpNodemailer = (userEmail, otp, html) => {
     const transporter = nodemailer_1.default.createTransport({
         host: 'smtp.gmail.com',
@@ -45,10 +46,7 @@ const sendOrderSuccessNodemailer = (userEmail, orderId) => {
         from: process.env.MAIN_MAIL,
         to: userEmail,
         subject: 'Xác nhận đơn hàng từ cửa hàng book store',
-        html: `
-            Cảm ơn bạn đã đặt hàng tại cửa hàng book store của chúng tôi sau đây là mã xác nhận đơn
-            hàng của bạn ${orderId}
-        `
+        html: (0, htmlContent_helper_1.orderSuccessHtml)(orderId)
     };
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {

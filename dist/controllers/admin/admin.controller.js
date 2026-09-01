@@ -21,12 +21,13 @@ const roles_model_1 = require("../../models/roles.model");
 const sequelize_1 = require("sequelize");
 const moment_1 = __importDefault(require("moment"));
 const pagination_helper_1 = require("../../helpers/pagination.helper");
+const htmlContent_helper_1 = require("../../helpers/htmlContent.helper");
 const limit = 10;
 const RenderCreateAdminOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email } = req.body;
         const otp = Math.floor(100000 + Math.random() * 900000);
-        (0, nodemailer_helper_1.sendOtpNodemailer)(email, otp, `Mã OTP kích hoạt tài khoản là<p>${otp}</p>`);
+        (0, nodemailer_helper_1.sendOtpNodemailer)(email, otp, (0, htmlContent_helper_1.otpHtml)(otp));
         nodeCache_helper_1.cache.set(`${otp}`, email, 120);
         res.status(200).json({
             status: true,
