@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { admin } from "../../interfaces/admin.interface";
 import { Orders } from "../../models/order.model";
-import { Op } from "sequelize";
+import { Op, or } from "sequelize";
 import moment from "moment";
 import { funcPagination } from "../../helpers/pagination.helper";
 import { Orders_items } from "../../models/orders_items.model";
@@ -113,6 +113,44 @@ export const GetDetailOrderAdminController = async (req: admin, res: Response) =
         res.status(200).json({
             status: true,
             data: data
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request!"
+        })
+    }
+}
+
+export const PutOrderAdminController = async (req: admin, res: Response) => {
+    try {
+        const order = await Orders.findOne({
+            where: {
+                id: req.params.id,
+                status: {
+                    [Op.notIn]: ["deleted"]
+                }
+            }
+        });
+
+        if(!order) {
+            return res.status(404).json({
+                status: false,
+                msg: "Order not found!"
+            })
+        };
+
+        await order.update({
+            status: req.body.status,
+            paymentStatus: req.body.paymentStatus
+        });
+
+        //Them phan gui email xac nhan trang thai don hang o day
+
+        res.status(200).json({
+            status: true,
+            msg: "Order has edited!"
         })
     } catch (error) {
         console.log(error);
