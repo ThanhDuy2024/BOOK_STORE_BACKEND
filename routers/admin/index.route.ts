@@ -5,6 +5,7 @@ import bookRoute from "./book.route";
 import adminAccountRoute from "./admin.route";
 import rolesRoute from "./roles.route";
 import orderRoute from "./order.route"
+import customersRoute from "./customers.route";
 import { adminMiddleware } from "../../middlewares/admin.middleware";
 const route = Router();
 
@@ -14,4 +15,5 @@ route.use("/books", adminMiddleware, bookRoute);
 route.use("/account", adminMiddleware, adminAccountRoute);
 route.use("/roles", rolesRoute);
 route.use("/order", adminMiddleware, orderRoute);
+route.use("/customers", adminMiddleware, customersRoute);
 export default route;
