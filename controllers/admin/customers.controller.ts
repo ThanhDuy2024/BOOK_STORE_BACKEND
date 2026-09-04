@@ -4,6 +4,7 @@ import { Customer } from "../../models/customer.model";
 import { Op } from "sequelize";
 import moment from "moment";
 import { funcPagination } from "../../helpers/pagination.helper";
+import { Comments } from "../../models/comments.model";
 
 export const GetAllCustomerAdminController = async (req: admin, res: Response) => {
     try {
@@ -61,6 +62,59 @@ export const GetAllCustomerAdminController = async (req: admin, res: Response) =
         res.status(400).json({
             status: false,
             msg: "Bad request"
+        })
+    }
+}
+
+export const GetCustomerAdminController = async (req: admin, res: Response) => {
+    try {
+        const customer: any = await Customer.findOne({
+            attributes: { exclude: ["password"] },
+            include: [
+                {
+                    model: Comments,
+                    as: "comments"
+                }
+            ],
+            where: {
+                id: req.params.id,
+                status: {
+                    [Op.in]: ["active", "inactive"]
+                }
+            }
+        });
+
+        if(!customer) {
+            return res.status(404).json({
+                status: false,
+                msg: "Customer not found!"
+            })
+        }
+
+        customer.dataValues.createdAtFormat = moment(customer.dataValues.createdAt).format("HH:mm DD/MM/YYYY");
+        
+        const comments = customer.dataValues.comments;
+
+        const newCommentsList: any = [];
+        for (const item of comments) {
+            const rawData: any = {
+                ...item.dataValues,
+                createdAtFormat: moment(item.dataValues.createdAt).format("HH:mm DD/MM/YYYY")
+            }
+            newCommentsList.push(rawData);
+        };
+
+        customer.dataValues.comments = newCommentsList;
+        
+        res.status(200).json({
+            status: true,
+            data: customer.dataValues
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request!"
         })
     }
 }
