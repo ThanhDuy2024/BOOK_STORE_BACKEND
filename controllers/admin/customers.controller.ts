@@ -22,17 +22,17 @@ export const GetAllCustomerAdminController = async (req: admin, res: Response) =
             limit: req.query.limit || 10
         };
 
-        if(req.query.search != "null") {
+        if (req.query.search != "null") {
             query.where.fullName = {
                 [Op.iLike]: `%${req.query.search}%`
             }
         };
 
-        if(req.query.email_search != "null") {
+        if (req.query.email_search != "null") {
             query.where.email = `${req.query.email_search}`
         };
 
-        if(req.query.status != "null") {
+        if (req.query.status != "null") {
             query.where.status = req.query.status;
         };
 
@@ -84,7 +84,7 @@ export const GetCustomerAdminController = async (req: admin, res: Response) => {
             }
         });
 
-        if(!customer) {
+        if (!customer) {
             return res.status(404).json({
                 status: false,
                 msg: "Customer not found!"
@@ -92,7 +92,7 @@ export const GetCustomerAdminController = async (req: admin, res: Response) => {
         }
 
         customer.dataValues.createdAtFormat = moment(customer.dataValues.createdAt).format("HH:mm DD/MM/YYYY");
-        
+
         const comments = customer.dataValues.comments;
 
         const newCommentsList: any = [];
@@ -105,10 +105,45 @@ export const GetCustomerAdminController = async (req: admin, res: Response) => {
         };
 
         customer.dataValues.comments = newCommentsList;
-        
+
         res.status(200).json({
             status: true,
             data: customer.dataValues
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request!"
+        })
+    }
+}
+
+export const PutCustomerAdminController = async (req: admin, res: Response) => {
+    try {
+        const customer = await Customer.findOne({
+            where: {
+                id: req.params.id,
+                status: {
+                    [Op.in]: ["active", "inactive"]
+                }
+            }
+        });
+
+        if (!customer) {
+            return res.status(404).json({
+                status: false,
+                msg: "Customer not found!"
+            })
+        };
+
+        await customer.update({
+            status: req.body.status
+        });
+
+        res.status(200).json({
+            status: true,
+            msg: "Customer has edited!"
         })
     } catch (error) {
         console.log(error);

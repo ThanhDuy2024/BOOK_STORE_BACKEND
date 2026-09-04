@@ -12,11 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetAllCustomerAdminController = void 0;
+exports.PutCustomerAdminController = exports.GetCustomerAdminController = exports.GetAllCustomerAdminController = void 0;
 const customer_model_1 = require("../../models/customer.model");
 const sequelize_1 = require("sequelize");
 const moment_1 = __importDefault(require("moment"));
 const pagination_helper_1 = require("../../helpers/pagination.helper");
+const comments_model_1 = require("../../models/comments.model");
 const GetAllCustomerAdminController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const query = {
@@ -72,3 +73,83 @@ const GetAllCustomerAdminController = (req, res) => __awaiter(void 0, void 0, vo
     }
 });
 exports.GetAllCustomerAdminController = GetAllCustomerAdminController;
+const GetCustomerAdminController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const customer = yield customer_model_1.Customer.findOne({
+            attributes: { exclude: ["password"] },
+            include: [
+                {
+                    model: comments_model_1.Comments,
+                    as: "comments"
+                }
+            ],
+            where: {
+                id: req.params.id,
+                status: {
+                    [sequelize_1.Op.in]: ["active", "inactive"]
+                }
+            }
+        });
+        if (!customer) {
+            return res.status(404).json({
+                status: false,
+                msg: "Customer not found!"
+            });
+        }
+        customer.dataValues.createdAtFormat = (0, moment_1.default)(customer.dataValues.createdAt).format("HH:mm DD/MM/YYYY");
+        const comments = customer.dataValues.comments;
+        const newCommentsList = [];
+        for (const item of comments) {
+            const rawData = Object.assign(Object.assign({}, item.dataValues), { createdAtFormat: (0, moment_1.default)(item.dataValues.createdAt).format("HH:mm DD/MM/YYYY") });
+            newCommentsList.push(rawData);
+        }
+        ;
+        customer.dataValues.comments = newCommentsList;
+        res.status(200).json({
+            status: true,
+            data: customer.dataValues
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request!"
+        });
+    }
+});
+exports.GetCustomerAdminController = GetCustomerAdminController;
+const PutCustomerAdminController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const customer = yield customer_model_1.Customer.findOne({
+            where: {
+                id: req.params.id,
+                status: {
+                    [sequelize_1.Op.in]: ["active", "inactive"]
+                }
+            }
+        });
+        if (!customer) {
+            return res.status(404).json({
+                status: false,
+                msg: "Customer not found!"
+            });
+        }
+        ;
+        yield customer.update({
+            status: req.body.status
+        });
+        res.status(200).json({
+            status: true,
+            msg: "Customer has edited!"
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request!"
+        });
+    }
+});
+exports.PutCustomerAdminController = PutCustomerAdminController;
