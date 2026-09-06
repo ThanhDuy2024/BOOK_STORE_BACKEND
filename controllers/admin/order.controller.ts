@@ -5,6 +5,7 @@ import { Op, or } from "sequelize";
 import moment from "moment";
 import { funcPagination } from "../../helpers/pagination.helper";
 import { Orders_items } from "../../models/orders_items.model";
+import { sendNotficationOrderStatus } from "../../helpers/nodemailer.helper";
 
 export const GetAllOrderAdminController = async (req: admin, res: Response) => {
     try {
@@ -146,7 +147,7 @@ export const PutOrderAdminController = async (req: admin, res: Response) => {
             paymentStatus: req.body.paymentStatus
         });
 
-        //Them phan gui email xac nhan trang thai don hang o day
+        sendNotficationOrderStatus(order.dataValues.email, order.dataValues.id, req.body.status);
 
         res.status(200).json({
             status: true,
