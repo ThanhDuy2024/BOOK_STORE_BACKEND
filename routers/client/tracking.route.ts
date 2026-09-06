@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { PostTrackingClientController } from "../../controllers/client/tracking.controller";
+import { DeleteTrackingClientController, PostTrackingClientController } from "../../controllers/client/tracking.controller";
 
 const route = Router();
 
-route.post("/", PostTrackingClientController)
-
+route.post("/", PostTrackingClientController);
+route.delete("/:id", DeleteTrackingClientController);
 export default route;
