@@ -18,6 +18,7 @@ const sequelize_1 = require("sequelize");
 const moment_1 = __importDefault(require("moment"));
 const pagination_helper_1 = require("../../helpers/pagination.helper");
 const orders_items_model_1 = require("../../models/orders_items.model");
+const nodemailer_helper_1 = require("../../helpers/nodemailer.helper");
 const GetAllOrderAdminController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const query = {
@@ -144,7 +145,7 @@ const PutOrderAdminController = (req, res) => __awaiter(void 0, void 0, void 0, 
             status: req.body.status,
             paymentStatus: req.body.paymentStatus
         });
-        //Them phan gui email xac nhan trang thai don hang o day
+        (0, nodemailer_helper_1.sendNotficationOrderStatus)(order.dataValues.email, order.dataValues.id, req.body.status);
         res.status(200).json({
             status: true,
             msg: "Order has edited!"

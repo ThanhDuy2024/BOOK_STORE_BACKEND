@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.otpHtml = exports.orderSuccessHtml = void 0;
+exports.orderStatus = exports.otpHtml = exports.orderSuccessHtml = void 0;
 const orderSuccessHtml = (orderId) => {
     return `
     <!DOCTYPE html>
@@ -180,3 +180,51 @@ const otpHtml = (otp) => {
     `;
 };
 exports.otpHtml = otpHtml;
+const orderStatus = (orderId, statusText) => {
+    return `
+    <!DOCTYPE html>
+    <html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <title>Cập nhật trạng thái đơn hàng</title>
+    </head>
+    <body style="margin: 0; padding: 20px; background-color: #f4f6f9; font-family: Arial, sans-serif;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px; background-color: #ffffff; border-radius: 8px; padding: 24px; border: 1px solid #e2e8f0;">
+            <tr>
+                <td align="center" style="padding-bottom: 16px;">
+                    <h2 style="color: #4f46e5; margin: 0; font-size: 22px;">Book Store</h2>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 16px 0; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9;">
+                    <p style="color: #334155; font-size: 15px; margin: 0 0 10px 0;">Xin chào,</p>
+                    <p style="color: #334155; font-size: 15px; margin: 0 0 16px 0;">
+                        Đơn hàng <b>#${orderId}</b> của bạn đã được cập nhật trạng thái mới:
+                    </p>
+                    <div style="text-align: center; background-color: #f8fafc; padding: 12px; border-radius: 6px; border: 1px inline #cbd5e1;">
+                        <span style="font-size: 16px; font-weight: bold; color: #4f46e5;">
+                            Đơn hàng của bạn ${statusText}
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" style="padding-top: 20px;">
+                    <a href="${process.env.CLIENT_URL || '#'}/order-success" style="display: inline-block; background-color: #4f46e5; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; font-size: 14px;">
+                        Xem đơn hàng
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" style="padding-top: 20px;">
+                    <p style="color: #94a3b8; font-size: 12px; margin: 0;">
+                        Cảm ơn bạn đã mua sắm tại Book Store!
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>
+    `;
+};
+exports.orderStatus = orderStatus;
