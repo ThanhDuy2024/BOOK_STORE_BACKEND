@@ -49,8 +49,8 @@ Dự án **Book Store Backend**
   * Lưu ý khách hàng phải đăng nhập để có thể bình luận.
 * **Thao tác trên trang danh sách sản phẩm**
   * Khách hàng có thể tìm kiếm, xem, lọc, danh sách sản phẩm khi sản phẩm đó còn hàng.
-* **Tracking đơn hàng**
-  * Khách hàng có thể nhập id đơn hàng + email khi đặt đơn hàng đó để theo chỉnh sửa theo giỏi đơn hàng đó.
+* **Tra cứu đơn hàng**
+  * Khách hàng có thể nhập id đơn hàng + email khi đặt đơn hàng đó để theo chỉnh sửa theo dõi đơn hàng đó.
 ---
 
 ## 🛠️ Công Nghệ Sử Dụng (Tech Stack)
