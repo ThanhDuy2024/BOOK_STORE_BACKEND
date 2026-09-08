@@ -56,18 +56,24 @@ export const sendOrderSuccessNodemailer = (userEmail: any, orderId: any) => {
 }
 
 export const sendNotficationOrderStatus = (userEmail: any, orderId: any, status: any) => {
-    const confirmOrder = "đã được xác nhận";
-    const transOrder = "đang giao hàng";
-    const completeOrder = "giao thành công";
+    const initOrder = "đang được khởi tạo";
+    const pendingOrder = "đang chờ xác nhận"
+    const confirmedOrder = "đã được xác nhận";
+    const shippingOrder = "đang giao hàng";
+    const deliveredOrder = "đã giao thành công";
 
     let statusText: any;
-    if(status === "confirm") {
-        statusText = confirmOrder;
-    } else if(status === "transport") {
-        statusText = transOrder;
-    } else if(status === "complete") {
-        statusText = completeOrder;
-    };
+    if(status === "init") {
+        statusText = initOrder;
+    } else if(status === "pending") {
+        statusText = pendingOrder;
+    } else if(status === "confirmed") {
+        statusText = confirmedOrder;
+    } else if(status === "shipping") {
+        statusText === shippingOrder;
+    } else if(status === "delivered") {
+        statusText = deliveredOrder;
+    }
 
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
