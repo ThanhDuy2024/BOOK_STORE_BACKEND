@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteTrackingClientController = exports.PostTrackingClientController = void 0;
+exports.PutTrackingClientController = exports.DeleteTrackingClientController = exports.PostTrackingClientController = void 0;
 const order_model_1 = require("../../models/order.model");
 const sequelize_1 = require("sequelize");
 const orders_items_model_1 = require("../../models/orders_items.model");
@@ -93,3 +93,40 @@ const DeleteTrackingClientController = (req, res) => __awaiter(void 0, void 0, v
     }
 });
 exports.DeleteTrackingClientController = DeleteTrackingClientController;
+const PutTrackingClientController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { address, phone } = req.body;
+        const { id } = req.params;
+        const order = yield order_model_1.Orders.findOne({
+            where: {
+                id: id,
+                status: {
+                    [sequelize_1.Op.notIn]: ["deleted"]
+                }
+            }
+        });
+        if (!order) {
+            return res.status(404).json({
+                status: true,
+                msg: "Order not found!"
+            });
+        }
+        ;
+        yield order.update({
+            address: address,
+            phone: phone
+        });
+        res.status(200).json({
+            status: true,
+            msg: "Your order has updated!"
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request!"
+        });
+    }
+});
+exports.PutTrackingClientController = PutTrackingClientController;
