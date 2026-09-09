@@ -83,3 +83,42 @@ export const DeleteTrackingClientController = async (req: Request, res: Response
         })
     }
 }
+
+export const PutTrackingClientController = async (req: Request, res: Response) => {
+    try {
+        const { address, phone } = req.body;
+        const { id } = req.params;
+
+        const order = await Orders.findOne({
+            where: {
+                id: id,
+                status: {
+                    [Op.notIn]: ["deleted"]
+                }
+            }
+        });
+
+        if(!order) {
+            return res.status(404).json({
+                status: true,
+                msg: "Order not found!"
+            })
+        };
+
+        await order.update({
+            address: address,
+            phone: phone
+        });
+        
+        res.status(200).json({
+            status: true,
+            msg: "Your order has updated!"
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            status: false,
+            msg: "Bad request!"
+        })
+    }
+}
