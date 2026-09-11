@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Orders } from "../../models/order.model";
-import { Op } from "sequelize";
+import { Op, or } from "sequelize";
 import { Orders_items } from "../../models/orders_items.model";
 import moment from "moment";
 
@@ -53,7 +53,7 @@ export const DeleteTrackingClientController = async (req: Request, res: Response
         const order = await Orders.findOne({
             where: {
                 status: {
-                    [Op.notIn]: ["deleted"]
+                    [Op.notIn]: ["deleted", "cancel"]
                 },
                 id: id,
                 paymentStatus: "unpaid"
@@ -64,6 +64,13 @@ export const DeleteTrackingClientController = async (req: Request, res: Response
             return res.status(404).json({
                 status: false,
                 msg: "Your order not found!"
+            })
+        };
+
+        if(order.dataValues.status != "init" && order.dataValues.status != "pending") {
+            return res.status(400).json({
+                status: false,
+                msg: "Your order is not cancel!"
             })
         };
 
