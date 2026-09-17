@@ -5,6 +5,7 @@ import orderRoute from "./order.route";
 import categoriesRoute from "./categories.route";
 import commentsRoute from "./comments.route";
 import trackingRoute from "./tracking.route";
+import contactsRoute from "./contacts.route";
 const route = Router();
 
 route.use("/auth", authRoute);
@@ -12,5 +13,6 @@ route.use("/books", booksRoute);
 route.use("/order", orderRoute);
 route.use("/categories", categoriesRoute);
 route.use("/comments", commentsRoute);
-route.use("/tracking", trackingRoute)
+route.use("/tracking", trackingRoute);
+route.use("/contacts", contactsRoute);
 export default route;
