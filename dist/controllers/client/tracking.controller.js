@@ -63,7 +63,7 @@ const DeleteTrackingClientController = (req, res) => __awaiter(void 0, void 0, v
         const order = yield order_model_1.Orders.findOne({
             where: {
                 status: {
-                    [sequelize_1.Op.notIn]: ["deleted"]
+                    [sequelize_1.Op.notIn]: ["deleted", "cancel"]
                 },
                 id: id,
                 paymentStatus: "unpaid"
@@ -73,6 +73,13 @@ const DeleteTrackingClientController = (req, res) => __awaiter(void 0, void 0, v
             return res.status(404).json({
                 status: false,
                 msg: "Your order not found!"
+            });
+        }
+        ;
+        if (order.dataValues.status != "init" && order.dataValues.status != "pending") {
+            return res.status(400).json({
+                status: false,
+                msg: "Your order is not cancel!"
             });
         }
         ;
