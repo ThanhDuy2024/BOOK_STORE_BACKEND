@@ -23,4 +23,4 @@ export const Roles = sequelize.define("roles", {
     }
 }, {
     timestamps: true
-})
+});
