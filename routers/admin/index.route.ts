@@ -13,7 +13,7 @@ route.use("/auth", authRoute);
 route.use("/categories", categoriesRoute);
 route.use("/books", adminMiddleware, bookRoute);
 route.use("/account", adminMiddleware, adminAccountRoute);
-route.use("/roles", rolesRoute);
+route.use("/roles", adminMiddleware, rolesRoute);
 route.use("/order", adminMiddleware, orderRoute);
 route.use("/customers", adminMiddleware, customersRoute);
 export default route;
